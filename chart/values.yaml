@@ -1,5 +1,6 @@
 resource:
   spec:
+    exposure: LoadBalancer
     httpd:
       image:
         name: packages.poweruplink.com/library/httpd-2.4
