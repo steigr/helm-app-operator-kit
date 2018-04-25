@@ -1,6 +1,22 @@
-default:
-  size: 1
-  image:
-    name: nginx
-    tag: latest
-    pullPolicy: Always
+resource:
+  spec:
+    httpd:
+      image:
+        name: packages.poweruplink.com/library/httpd-2.4
+        tag: v2.4.33-r0
+    php:
+      image:
+        name: packages.poweruplink.com/library/php-fpm
+        tag: v5.6.35-r0
+    mariadb:
+      image:
+        name: packages.poweruplink.com/library/mariadb
+        tag: v10.1.32-r0
+    minio:
+      image:
+        name: packages.poweruplink.com/library/minio
+        tag: vRELEASE.2018-04-19T22-54-58Z
+    magento:
+      image:
+        name: packages.poweruplink.com/library/magento
+        tag: v1.9.3.8

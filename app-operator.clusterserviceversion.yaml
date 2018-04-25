@@ -7,19 +7,19 @@
 apiVersion: app.coreos.com/v1alpha1
 kind: ClusterServiceVersion-v1
 metadata:
-  name: example-app-operator.YOUR_VERSION_HERE
+  name: magento-operator.YOUR_VERSION_HERE
   namespace: YOUR_NAMESPACE_HERE
 spec:
   install: 
     strategy: deployment
     spec:
       permissions:
-      - serviceAccountName: example-app-operator
+      - serviceAccountName: magento-operator
         rules:
         - apiGroups:
-          - example.com
+          - poweruplink.com
           resources:
-          - example-apps
+          - magentos
           verbs:
           - "*"
         - apiGroups:
@@ -44,16 +44,16 @@ spec:
           verbs:
           - "*"
       deployments: 
-      - name: example-app-operator
+      - name: magento-operator
         spec:
           replicas: 1
           selector:
             matchLabels:
-              app: example-app-operator
+              app: magento-operator
           template:
             metadata:
               labels:
-                app: example-app-operator
+                app: magento-operator
             spec:
               containers:
                 - name: sao
@@ -61,17 +61,17 @@ spec:
                   ports:
                     - containerPort: 8080
                       protocol: TCP
-                  imagePullPolicy: Always
+                  imagePullPolicy: IfNotPresent
               restartPolicy: Always
               terminationGracePeriodSeconds: 5
-              serviceAccountName: example-app-operator
-              serviceAccount: example-app-operator
+              serviceAccountName: magento-operator
+              serviceAccount: magento-operator
   customresourcedefinitions:
     owned:
-      - description: Represents a cluster of example apps
-        displayName: Example App
-        kind: ExampleApp
-        name: example-apps.example.com
+      - description: Magento 1.9 Deployment
+        displayName: Magento 1.9
+        kind: Magento
+        name: magentos.poweruplink.com
         version: v1alpha1
         resources:
           - kind: Deployment
@@ -98,18 +98,23 @@ spec:
             x-descriptors:
               - 'urn:alm:descriptor:io.kubernetes.phase:reason'
   keywords:
-    - example
+    - magento
+    - ecommerce
+    - shop
     - app
-  displayName: Example Application
+  displayName: Magento 1.9
   provider:
-    name: Example Corp
-    url: www.example.com
+    name: PowerUpLink GmbH
+    url: poweruplink.com
   maturity: alpha
   version: YOUR_SEM_VERSION_HERE
   maintainers:
-    - email: corp@example.com
-      name: Some Corp
-  description: Main enterprise application providing business critical features with high availabilty and no manual intervention.
+    - email: mk@poweruplink.com
+      name: Mathias Kaufmann
+  description: Magento 1.9 eCommerce Platform
   labels:
-    alm-owner-enterprise-app: example-app-operator
-    alm-status-descriptors: example-app-operator.YOUR_VERSION_HERE
+    alm-owner-enterprise-app: magento-operator
+    alm-status-descriptors: magento-operator.YOUR_VERSION_HERE
+  icon:
+    - base64data: >-
+        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

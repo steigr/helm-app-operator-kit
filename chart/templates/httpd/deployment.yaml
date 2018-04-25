@@ -1,0 +1,46 @@
+{{- $kind := "httpd" -}}
+{{- $app := printf "%s-%s" .Values.resource.name $kind -}}
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ $app }}
+  labels:
+    k8s-app: {{ $app }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      k8s-app: {{ $app }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: {{ $app }}
+    spec:
+      containers:
+        - name: httpd
+{{- with .Values.resource.spec.httpd.image -}}
+          image: {{ .name }}:{{ .tag }}
+{{- end -}}
+          ports:
+            - name: http
+              containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1

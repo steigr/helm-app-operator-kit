@@ -1,0 +1,19 @@
+{{- $kind := "httpd" -}}
+{{- $app := printf "%s-%s" .Values.resource.name $kind -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $app }}
+  labels:
+    k8s-app: {{ $app }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    k8s-app: {{ $app }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
